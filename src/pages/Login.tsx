@@ -13,7 +13,6 @@ const Login: FC = () => {
       const user = result.user;
       const token = await user?.getIdToken();
       setCookie(null, "token", token || "", { path: "/" });
-      console.log({ ...user?.toJSON(), idToken: token });
       localStorage.setItem(
         "user",
         JSON.stringify({ ...user?.toJSON(), idToken: token })
