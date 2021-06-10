@@ -10,8 +10,17 @@ import { useAppDispatch, useAppSelector } from "../app/hook";
 import { deletePost, likePost } from "../actions/postsActions";
 import { onOpenModal } from "../slices/modalSlice";
 import { selectUser } from "../slices/userSlice";
+import moment from "moment";
 
-const Post: FC<IPost> = ({ id, title, description, likes, user: postUser }) => {
+const Post: FC<IPost> = ({
+  id,
+  title,
+  description,
+  likes,
+  user: postUser,
+  createdAt,
+  updatedAt,
+}) => {
   const [likeLoading, setLikeLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
@@ -48,14 +57,19 @@ const Post: FC<IPost> = ({ id, title, description, likes, user: postUser }) => {
 
   return (
     <div className="bg-gray-800 text-white my-4 p-5 rounded-2xl w-10/12 max-w-screen-xl">
-      <div className="flex items-center space-x-2 p-2 bg-gray-700 rounded-md w-max">
-        <img
-          className="h-10 rounded-full object-contain"
-          src={postUser?.photoURL}
-          loading="lazy"
-          alt={postUser?.displayName.charAt(0)}
-        />
-        <p>{postUser?.displayName}</p>
+      <div className="flex items-center">
+        <div className="flex items-center space-x-2 p-2 bg-gray-700 rounded-md w-max">
+          <img
+            className="h-10 rounded-full object-contain"
+            src={postUser?.photoURL}
+            loading="lazy"
+            alt={postUser?.displayName.charAt(0)}
+          />
+          <p>{postUser?.displayName}</p>
+        </div>
+        <p className="test-sm text-gray-400 ml-2">
+          {moment(createdAt).fromNow()}
+        </p>
       </div>
 
       {/* title  and edit bar*/}

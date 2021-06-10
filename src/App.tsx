@@ -1,11 +1,11 @@
 import axios from "./axios";
 import { useEffect } from "react";
-import { useAppDispatch } from "./app/hook";
+import { useAppDispatch, useAppSelector } from "./app/hook";
 import { setPosts } from "./slices/postSlice";
-import { useLocation } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import { IUser, signIn, signOut } from "./slices/userSlice";
+import { IUser, selectUser, signIn, signOut } from "./slices/userSlice";
 import Login from "./pages/Login";
 import decode, { JwtPayload } from "jwt-decode";
 
@@ -14,6 +14,7 @@ function App() {
   const location = useLocation();
 
   const userObject = localStorage.getItem("user");
+  const user = useAppSelector(selectUser);
 
   useEffect(() => {
     axios.get("/posts").then((res) => {
@@ -27,8 +28,6 @@ function App() {
       localStorage.removeItem("user");
     };
 
-    console.log(userObject);
-
     if (userObject) {
       const user: IUser = JSON.parse(userObject);
 
@@ -36,7 +35,6 @@ function App() {
 
       if (token) {
         const decodedToken = decode<JwtPayload>(token);
-        console.log(decodedToken.exp);
         if (
           decodedToken.exp &&
           decodedToken.exp * 1000 < new Date().getTime()
@@ -65,7 +63,7 @@ function App() {
           <Home />
         </Route>
         <Route exact path="/login">
-          <Login />
+          {user ? <Redirect to="/" /> : <Login />}
         </Route>
       </Switch>
     </div>

@@ -16,6 +16,8 @@ const PostFeed: FC = () => {
           description={post.description}
           likes={post.likes}
           user={post.user}
+          createdAt={post.createdAt}
+          updatedAt={post.updatedAt}
         />
       ))}
     </div>

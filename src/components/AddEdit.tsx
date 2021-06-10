@@ -12,7 +12,7 @@ const AddEdit: FC = () => {
   const { id, title, description } = useAppSelector(selectPost);
 
   const [pageType, setPageType] = useState<string>("Add");
-
+  const [error, setError] = useState<string>("");
   const [post, setPost] = useState<IPost>({
     title: "",
     description: "",
@@ -34,14 +34,19 @@ const AddEdit: FC = () => {
       title: "",
       description: "",
     });
+    setError("");
   };
 
   const handleSubmit: FormEventHandler = async (
     e: FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+    setError("");
 
-    if (post.title.trim() === "" || post.description.trim() === "") return;
+    if (post.title.trim() === "" || post.description.trim() === "") {
+      setError("All fields are required!!");
+      return;
+    }
 
     setLoading(true);
     if (id) {
@@ -51,6 +56,7 @@ const AddEdit: FC = () => {
       });
       if (!response.error) {
         clear();
+        setError(response.error.toString());
         dispatch(updatePosts(response.data));
         dispatch(onCloseModal());
       }
@@ -58,6 +64,7 @@ const AddEdit: FC = () => {
       const response = await createPost(post);
       if (!response.error) {
         clear();
+        setError(response.error.toString());
         dispatch(addPost(response.data));
         dispatch(onCloseModal());
       }
@@ -67,6 +74,7 @@ const AddEdit: FC = () => {
   };
 
   const handleModalClose = () => {
+    setError("");
     dispatch(onCloseModal());
   };
 
@@ -111,6 +119,7 @@ const AddEdit: FC = () => {
               });
             }}
           />
+          <span className="text-red-500 text-center">{error}</span>
           <div
             className={`flex bg-blue-500 p-2 w-max rounded-md ${
               loading && "bg-blue-300"

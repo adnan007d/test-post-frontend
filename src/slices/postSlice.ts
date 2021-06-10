@@ -7,7 +7,8 @@ export interface IPost {
   title: string;
   description: string;
   likes?: [];
-  timestamp?: number;
+  createdAt?: string;
+  updatedAt?: string;
   user?: IUser;
 }
 
